@@ -9,34 +9,24 @@ class CountDownTimer {
 
   double _radius = 1;
   bool _isActive = true;
-  Timer timer;
   Duration _time;
   Duration _fullTime;
 
-  Duration getTime() {
-    return _time;
-  }
-
-  double getRadius() {
-    return _radius;
-  }
-
   void startWork() async {
     await readSettings();
-    _radius = 1;
+    this._isActive = true;
     _time = Duration(minutes: this.work, seconds: 0);
     _fullTime = _time;
   }
 
   void startBreak(bool isShort) async {
     await readSettings();
-    _radius = 1;
+    this._isActive = true;
     _time = Duration(minutes: (isShort) ? shortBreak : longBreak, seconds: 0);
     _fullTime = _time;
   }
 
-  void startTimer() async {
-    await readSettings();
+  void startTimer() {
     if (_time.inSeconds > 0) {
       this._isActive = true;
     }
@@ -44,11 +34,15 @@ class CountDownTimer {
 
   Future readSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    work = prefs.getInt('workTime') == null ? 30 : prefs.getInt('workTime');
-    shortBreak =
-        prefs.getInt('shortBreak') == null ? 30 : prefs.getInt('shortBreak');
-    longBreak =
-        prefs.getInt('longBreak') == null ? 30 : prefs.getInt('longBreak');
+    work = prefs.getInt('workTime') == null ? work : prefs.getInt('workTime');
+
+    shortBreak = prefs.getInt('shortBreak') == null
+        ? shortBreak
+        : prefs.getInt('shortBreak');
+
+    longBreak = prefs.getInt('longBreak') == null
+        ? longBreak
+        : prefs.getInt('longBreak');
   }
 
   void stopTimer() {
@@ -67,17 +61,21 @@ class CountDownTimer {
   }
 
   Stream<TimerModel> stream() async* {
-    yield* Stream.periodic(Duration(seconds: 1), (int a) {
-      String time;
-      if (this._isActive) {
-        _time = _time - Duration(seconds: 1);
-        _radius = _time.inSeconds / _fullTime.inSeconds;
-        if (_time.inSeconds <= 0) {
-          _isActive = false;
+    yield* Stream.periodic(
+      Duration(seconds: 1),
+      (int a) {
+        // print(a);
+        String time;
+        if (this._isActive) {
+          _time = _time - Duration(seconds: 1);
+          _radius = _time.inSeconds / _fullTime.inSeconds;
+          if (_time.inSeconds <= 0) {
+            _isActive = false;
+          }
         }
-      }
-      time = returnTime(_time);
-      return TimerModel(timer: time, percentage: _radius);
-    });
+        time = returnTime(_time);
+        return TimerModel(timer: time, percentage: _radius);
+      },
+    );
   }
 }

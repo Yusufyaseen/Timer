@@ -32,18 +32,17 @@ class _SettingsState extends State<Settings> {
   int workTime;
   int shortBreak;
   int longBreak;
-  int Uwork;
-  int USbreak;
-  int ULbreak;
+  int updateWork;
+  int updateShortBreak;
+  int updateLongBreak;
   final txtWork = TextEditingController();
   final txtShort = TextEditingController();
   final txtLong = TextEditingController();
   TextStyle textStyle = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
   TextStyle inputStyle = TextStyle(fontSize: 24);
-  TextField fields(dynamic c, {bool auto = false}) {
+  TextField fields(dynamic c) {
     return TextField(
       controller: c,
-      autofocus: auto,
       style: this.inputStyle,
       textAlign: TextAlign.center,
       keyboardType: TextInputType.number,
@@ -124,19 +123,19 @@ class _SettingsState extends State<Settings> {
 
   void _updateWork() {
     setState(() {
-      Uwork = int.parse(txtWork.text);
+      updateWork = int.parse(txtWork.text);
     });
   }
 
   void _updateShortBreak() {
     setState(() {
-      USbreak = int.parse(txtShort.text);
+      updateShortBreak = int.parse(txtShort.text);
     });
   }
 
   void _updateLongBreak() {
     setState(() {
-      ULbreak = int.parse(txtLong.text);
+      updateLongBreak = int.parse(txtLong.text);
     });
   }
 
@@ -170,18 +169,18 @@ class _SettingsState extends State<Settings> {
               crossAxisCount: 2,
               childAspectRatio: 3,
               crossAxisSpacing: 20,
-              mainAxisSpacing: 70,
+              mainAxisSpacing: 50,
               padding: EdgeInsets.all(20),
               children: [
-                fields(txtWork, auto: true),
-                SettingsButton(Color(0xff009688), "Update Work", Uwork,
+                fields(txtWork),
+                SettingsButton(Color(0xff009688), "Update Work", updateWork,
                     WORKTIME, updateSettings),
                 fields(txtShort),
-                SettingsButton(Color(0xff009688), "Update Short Break", USbreak,
-                    SHORTBREAK, updateSettings),
+                SettingsButton(Color(0xff009688), "Update Short Break",
+                    updateShortBreak, SHORTBREAK, updateSettings),
                 fields(txtLong),
-                SettingsButton(Color(0xff009688), "Update Long Break", ULbreak,
-                    LONGBREAK, updateSettings),
+                SettingsButton(Color(0xff009688), "Update Long Break",
+                    updateLongBreak, LONGBREAK, updateSettings),
               ],
             ),
           ),
@@ -190,144 +189,3 @@ class _SettingsState extends State<Settings> {
     );
   }
 }
-
-//
-//
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-//
-// import 'Widgets.dart';
-//
-// class SettingsScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Settings"),
-//       ),
-//       body: Container(
-//         child: Settings(),
-//       ),
-//     );
-//   }
-// }
-//
-// class Settings extends StatefulWidget {
-//   @override
-//   _SettingsState createState() => _SettingsState();
-// }
-//
-// class _SettingsState extends State<Settings> {
-//   SharedPreferences prefs;
-//   static const String WORKTIME = "workTime";
-//   static const String SHORTBREAK = "shortBreak";
-//   static const String LONGBREAK = "longBreak";
-//   int workTime;
-//   int shortBreak;
-//   int longBreak;
-//
-//   final txtWork = TextEditingController();
-//   final txtShort = TextEditingController();
-//   final txtLong = TextEditingController();
-//   TextStyle textStyle = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
-//   TextStyle inputStyle = TextStyle(fontSize: 24);
-//   TextField fields(dynamic c, {bool auto = false}) {
-//     return TextField(
-//       controller: c,
-//       autofocus: auto,
-//       style: this.inputStyle,
-//       textAlign: TextAlign.center,
-//       keyboardType: TextInputType.number,
-//     );
-//   }
-//
-//   readSettings() async {
-//     prefs = await SharedPreferences.getInstance();
-//     if (prefs.getInt(WORKTIME) == null) {
-//       await prefs.setInt(WORKTIME, 30);
-//     }
-//     workTime = prefs.getInt(WORKTIME);
-//     if (shortBreak == null) {
-//       await prefs.setInt(SHORTBREAK, 5);
-//     }
-//     shortBreak = prefs.getInt(SHORTBREAK);
-//
-//     if (longBreak == null) {
-//       await prefs.setInt(LONGBREAK, 20);
-//     }
-//     longBreak = prefs.getInt(LONGBREAK);
-//     setState(() {
-//       txtWork.text = workTime.toString();
-//       txtShort.text = shortBreak.toString();
-//       txtLong.text = longBreak.toString();
-//     });
-//   }
-//
-//   void updateSettings(String key, int value) {
-//     switch (key) {
-//       case WORKTIME:
-//         {
-//           if (value >= 1 && value <= 180) {
-//             workTime = value;
-//             prefs.setInt(WORKTIME, workTime);
-//           }
-//         }
-//         break;
-//       case SHORTBREAK:
-//         {
-//           if (value >= 1 && value <= 90) {
-//             shortBreak = value;
-//             prefs.setInt(SHORTBREAK, shortBreak);
-//             setState(() {
-//               txtShort.text = shortBreak.toString();
-//             });
-//           }
-//         }
-//         break;
-//       case LONGBREAK:
-//         {
-//           if (value >= 1 && value <= 180) {
-//             longBreak = value;
-//             prefs.setInt(LONGBREAK, longBreak);
-//             setState(() {
-//               txtLong.text = longBreak.toString();
-//             });
-//           }
-//         }
-//         break;
-//     }
-//   }
-//
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     readSettings();
-//     super.initState();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: GridView.count(
-//         scrollDirection: Axis.vertical,
-//         crossAxisCount: 2,
-//         childAspectRatio: 5,
-//         crossAxisSpacing: 20,
-//         mainAxisSpacing: 70,
-//         padding: EdgeInsets.all(20),
-//         children: [
-//           fields(txtWork, auto: true),
-//           SettingsButton(Color(0xff009688), "Update Work",
-//               int.parse(txtWork.text), WORKTIME, updateSettings),
-//           fields(txtShort),
-//           SettingsButton(Color(0xff009688), "Update Short Break",
-//               int.parse(txtShort.text), SHORTBREAK, updateSettings),
-//           fields(txtLong),
-//           SettingsButton(Color(0xff009688), "Update Long Break",
-//               int.parse(txtLong.text), LONGBREAK, updateSettings),
-//         ],
-//       ),
-//     );
-//   }
-// }

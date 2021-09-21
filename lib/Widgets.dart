@@ -11,12 +11,6 @@ class ProductivityButton extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    // return MaterialButton(
-    //   child: Text(text!, style: TextStyle(color: Colors.white)),
-    //   onPressed: this.onPressed,
-    //   color: this.color,
-    //   minWidth: this.size,
-    // );
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         minimumSize: Size(0, 40),
